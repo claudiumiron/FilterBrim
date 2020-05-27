@@ -18,6 +18,11 @@ class PreviewMetalView: MTKView {
         case rotate270Degrees
     }
     
+    enum Resizing: Int {
+        case aspectFit
+        case aspectFill
+    }
+    
     var mirroring = false {
         didSet {
             syncQueue.sync {
@@ -110,7 +115,7 @@ class PreviewMetalView: MTKView {
         textureCache = nil
     }
     
-    private func setupTransform(width: Int, height: Int, mirroring: Bool, rotation: Rotation) {
+    private func setupTransform(width: Int, height: Int, mirroring: Bool, rotation: Rotation, resizing: Resizing) {
         var scaleX: Float = 1.0
         var scaleY: Float = 1.0
         var resizeAspect: Float = 1.0
@@ -132,14 +137,28 @@ class PreviewMetalView: MTKView {
                 scaleY = Float(internalBounds.height / CGFloat(textureWidth))
             }
         }
+        
         // Resize aspect ratio.
-        resizeAspect = min(scaleX, scaleY)
-        if scaleX < scaleY {
-            scaleY = scaleX / scaleY
-            scaleX = 1.0
-        } else {
-            scaleX = scaleY / scaleX
-            scaleY = 1.0
+        switch resizing {
+        case .aspectFit:
+            resizeAspect = min(scaleX, scaleY)
+            if scaleX < scaleY {
+                scaleY = scaleX / scaleY
+                scaleX = 1.0
+            } else {
+                scaleX = scaleY / scaleX
+                scaleY = 1.0
+            }
+            
+        case .aspectFill:
+            resizeAspect = max(scaleX, scaleY)
+            if scaleX > scaleY {
+                scaleY = scaleX / scaleY
+                scaleX = 1.0
+            } else {
+                scaleX = scaleY / scaleX
+                scaleY = 1.0
+            }
         }
         
         if textureMirroring {
@@ -316,7 +335,7 @@ class PreviewMetalView: MTKView {
             self.bounds != internalBounds ||
             mirroring != textureMirroring ||
             rotation != textureRotation {
-            setupTransform(width: texture.width, height: texture.height, mirroring: mirroring, rotation: rotation)
+            setupTransform(width: texture.width, height: texture.height, mirroring: mirroring, rotation: rotation, resizing: .aspectFill)
         }
         
         // Set up command buffer and encoder
