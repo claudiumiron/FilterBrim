@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>AVCamFilter</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -25,9 +25,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>AVCamFilter uses the camera to take photos and video.</string>
+	<string>FilterBrim uses the camera to take photos and video.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>AVCamFilter saves captured photos and videos to your photo library.</string>
+	<string>FilterBrim saves captured photos and videos to your photo library.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

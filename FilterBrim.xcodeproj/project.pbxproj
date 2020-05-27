@@ -32,11 +32,11 @@
 		2633CF1C1E7C65D500FC80E1 /* DepthToGrayscaleConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepthToGrayscaleConverter.swift; sourceTree = "<group>"; };
 		2672370B1E79BF6E003D2EAA /* RosyEffect.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = RosyEffect.metal; sourceTree = "<group>"; };
 		2672370D1E79BFBF003D2EAA /* DepthToGrayscale.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = DepthToGrayscale.metal; sourceTree = "<group>"; };
-		267ED84D1ED7965A00898078 /* AVCamFilter-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AVCamFilter-Bridging-Header.h"; sourceTree = "<group>"; };
+		267ED84D1ED7965A00898078 /* FilterBrim-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FilterBrim-Bridging-Header.h"; sourceTree = "<group>"; };
 		267ED84E1ED7965B00898078 /* minMaxFromBuffer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = minMaxFromBuffer.m; sourceTree = "<group>"; };
 		267ED84F1ED7965B00898078 /* minMaxFromBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = minMaxFromBuffer.h; sourceTree = "<group>"; };
 		E414FC6C1D5921FD0007C979 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		E422DFB71CEF894F0047D7A4 /* AVCamFilter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AVCamFilter.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E422DFB71CEF894F0047D7A4 /* FilterBrim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FilterBrim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E422DFBF1CEF894F0047D7A4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E422DFC11CEF894F0047D7A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E422DFC41CEF894F0047D7A4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -77,7 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				E414FC6C1D5921FD0007C979 /* README.md */,
-				E422DFB91CEF894F0047D7A4 /* AVCamFilter */,
+				E422DFB91CEF894F0047D7A4 /* FilterBrim */,
 				E422DFB81CEF894F0047D7A4 /* Products */,
 				E7C549B0E7C54A5000000001 /* Configuration */,
 				E7D94C30E7D94E6000000001 /* LICENSE */,
@@ -87,12 +87,12 @@
 		E422DFB81CEF894F0047D7A4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E422DFB71CEF894F0047D7A4 /* AVCamFilter.app */,
+				E422DFB71CEF894F0047D7A4 /* FilterBrim.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E422DFB91CEF894F0047D7A4 /* AVCamFilter */ = {
+		E422DFB91CEF894F0047D7A4 /* FilterBrim */ = {
 			isa = PBXGroup;
 			children = (
 				E422DFCD1CEF8AF50047D7A4 /* AppDelegate.swift */,
@@ -110,9 +110,9 @@
 				E422DFC11CEF894F0047D7A4 /* Assets.xcassets */,
 				E422DFC31CEF894F0047D7A4 /* LaunchScreen.storyboard */,
 				E422DFC61CEF894F0047D7A4 /* Info.plist */,
-				267ED84D1ED7965A00898078 /* AVCamFilter-Bridging-Header.h */,
+				267ED84D1ED7965A00898078 /* FilterBrim-Bridging-Header.h */,
 			);
-			path = AVCamFilter;
+			path = FilterBrim;
 			sourceTree = "<group>";
 		};
 		E7C549B0E7C54A5000000001 /* Configuration */ = {
@@ -134,9 +134,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E422DFB61CEF894F0047D7A4 /* AVCamFilter */ = {
+		E422DFB61CEF894F0047D7A4 /* FilterBrim */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E422DFC91CEF894F0047D7A4 /* Build configuration list for PBXNativeTarget "AVCamFilter" */;
+			buildConfigurationList = E422DFC91CEF894F0047D7A4 /* Build configuration list for PBXNativeTarget "FilterBrim" */;
 			buildPhases = (
 				E422DFB31CEF894F0047D7A4 /* Sources */,
 				E422DFB41CEF894F0047D7A4 /* Frameworks */,
@@ -146,9 +146,9 @@
 			);
 			dependencies = (
 			);
-			name = AVCamFilter;
+			name = FilterBrim;
 			productName = AVCamFilter;
-			productReference = E422DFB71CEF894F0047D7A4 /* AVCamFilter.app */;
+			productReference = E422DFB71CEF894F0047D7A4 /* FilterBrim.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -170,7 +170,7 @@
 					};
 				};
 			};
-			buildConfigurationList = E422DFB21CEF894F0047D7A4 /* Build configuration list for PBXProject "AVCamFilter" */;
+			buildConfigurationList = E422DFB21CEF894F0047D7A4 /* Build configuration list for PBXProject "FilterBrim" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -183,7 +183,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E422DFB61CEF894F0047D7A4 /* AVCamFilter */,
+				E422DFB61CEF894F0047D7A4 /* FilterBrim */,
 			);
 		};
 /* End PBXProject section */
@@ -370,7 +370,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = UXLUB77RV4;
-				INFOPLIST_FILE = AVCamFilter/Info.plist;
+				INFOPLIST_FILE = FilterBrim/Info.plist;
 				INSTALL_PATH = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -378,10 +378,10 @@
 				MTL_OPTIMIZATION_LEVEL = 0;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = ro.claudiumiron.filterbrim;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = FilterBrim;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
-				SWIFT_OBJC_BRIDGING_HEADER = "AVCamFilter/AVCamFilter-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "FilterBrim/FilterBrim-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -397,17 +397,17 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = UXLUB77RV4;
-				INFOPLIST_FILE = AVCamFilter/Info.plist;
+				INFOPLIST_FILE = FilterBrim/Info.plist;
 				INSTALL_PATH = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_LANGUAGE_REVISION = UseDeploymentTarget;
 				MTL_OPTIMIZATION_LEVEL = 0;
 				PRODUCT_BUNDLE_IDENTIFIER = ro.claudiumiron.filterbrim;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = FilterBrim;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
-				SWIFT_OBJC_BRIDGING_HEADER = "AVCamFilter/AVCamFilter-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "FilterBrim/FilterBrim-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -415,7 +415,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E422DFB21CEF894F0047D7A4 /* Build configuration list for PBXProject "AVCamFilter" */ = {
+		E422DFB21CEF894F0047D7A4 /* Build configuration list for PBXProject "FilterBrim" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E422DFC71CEF894F0047D7A4 /* Debug */,
@@ -424,7 +424,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E422DFC91CEF894F0047D7A4 /* Build configuration list for PBXNativeTarget "AVCamFilter" */ = {
+		E422DFC91CEF894F0047D7A4 /* Build configuration list for PBXNativeTarget "FilterBrim" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E422DFCA1CEF894F0047D7A4 /* Debug */,
