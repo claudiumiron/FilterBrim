@@ -236,9 +236,9 @@ class PreviewMetalView: MTKView {
         }
         
         transform = transform.concatenating(CGAffineTransform(scaleX: CGFloat(resizeAspect), y: CGFloat(resizeAspect)))
-        let tranformRect = CGRect(origin: .zero, size: CGSize(width: textureWidth, height: textureHeight)).applying(transform)
-        let xShift = (internalBounds.size.width - tranformRect.size.width) / 2
-        let yShift = (internalBounds.size.height - tranformRect.size.height) / 2
+        let transformRect = CGRect(origin: .zero, size: CGSize(width: textureWidth, height: textureHeight)).applying(transform)
+        let xShift = (internalBounds.size.width - transformRect.size.width) / 2
+        let yShift = (internalBounds.size.height - transformRect.size.height) / 2
         transform = transform.concatenating(CGAffineTransform(translationX: xShift, y: yShift))
         textureTranform = transform.inverted()
     }
