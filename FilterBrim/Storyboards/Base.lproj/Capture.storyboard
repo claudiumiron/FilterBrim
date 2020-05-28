@@ -8,10 +8,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Capture View Controller-->
         <scene sceneID="okb-4F-36b">
             <objects>
-                <viewController interfaceStyle="dark" id="K6v-K7-AGl" sceneMemberID="viewController">
+                <viewController interfaceStyle="dark" id="K6v-K7-AGl" customClass="CaptureViewController" customModule="FilterBrim" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="IMX-gS-fck">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
