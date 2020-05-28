@@ -73,6 +73,15 @@
 			path = Shaders;
 			sourceTree = "<group>";
 		};
+		B8649E26247FAE74005AED48 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				E422DFC31CEF894F0047D7A4 /* LaunchScreen.storyboard */,
+				E422DFBE1CEF894F0047D7A4 /* Main.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
 		E422DFAE1CEF894F0047D7A4 = {
 			isa = PBXGroup;
 			children = (
@@ -95,6 +104,7 @@
 		E422DFB91CEF894F0047D7A4 /* FilterBrim */ = {
 			isa = PBXGroup;
 			children = (
+				B8649E26247FAE74005AED48 /* Storyboards */,
 				E422DFCD1CEF8AF50047D7A4 /* AppDelegate.swift */,
 				E422DFCC1CEF8AF50047D7A4 /* CameraViewController.swift */,
 				E46129031CF4C0B8004FE176 /* PreviewMetalView.swift */,
@@ -106,9 +116,7 @@
 				267ED84F1ED7965B00898078 /* minMaxFromBuffer.h */,
 				267ED84E1ED7965B00898078 /* minMaxFromBuffer.m */,
 				2672370F1E79BFD1003D2EAA /* Shaders */,
-				E422DFBE1CEF894F0047D7A4 /* Main.storyboard */,
 				E422DFC11CEF894F0047D7A4 /* Assets.xcassets */,
-				E422DFC31CEF894F0047D7A4 /* LaunchScreen.storyboard */,
 				E422DFC61CEF894F0047D7A4 /* Info.plist */,
 				267ED84D1ED7965A00898078 /* FilterBrim-Bridging-Header.h */,
 			);
