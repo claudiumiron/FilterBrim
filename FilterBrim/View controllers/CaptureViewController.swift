@@ -32,6 +32,8 @@ class CaptureViewController: UIViewController {
     
     private let videoFileOutput = AVCaptureMovieFileOutput()
     
+    private var tempVideoUrls: [URL] = []
+    
     private var isSessionRunning = false
     
     @IBOutlet private weak var videoView: UIView!
@@ -289,7 +291,7 @@ class CaptureViewController: UIViewController {
         
         self.present(alertController, animated: true, completion: nil)
     }
-    
+
     // MARK: - IBActions
     
     @IBAction func didTapCameraButton(_ sender: UIButton) {
@@ -330,7 +332,18 @@ class CaptureViewController: UIViewController {
     }
     
     @IBAction func recordStateDidChange(_ sender: UISwitch) {
-        
+        if sender.isOn {
+            var urlCount = tempVideoUrls.count
+            urlCount += 1
+            let tempFolderUrl = URL(fileURLWithPath: NSTemporaryDirectory())
+            let tempVideoUrl =
+                tempFolderUrl.appendingPathComponent("temp\(urlCount)")
+            videoFileOutput.startRecording(to: tempVideoUrl,
+                                           recordingDelegate: self)
+        } else {
+            recordButton.isEnabled = false
+            videoFileOutput.stopRecording()
+        }
     }
     
     
@@ -465,4 +478,23 @@ class CaptureViewController: UIViewController {
             self.alert(title: "FilterBrim", message: message, actions: actions)
         }
     }
+}
+
+extension CaptureViewController: AVCaptureFileOutputRecordingDelegate {
+    
+    func fileOutput(_ output: AVCaptureFileOutput,
+                    didFinishRecordingTo outputFileURL: URL,
+                    from connections: [AVCaptureConnection],
+                    error: Error?) {
+        DispatchQueue.main.async {
+            self.recordButton.isEnabled = true
+        }
+        
+        guard error == nil else {
+            return
+        }
+        
+        tempVideoUrls.append(outputFileURL)
+    }
+    
 }
