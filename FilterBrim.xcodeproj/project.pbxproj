@@ -85,6 +85,14 @@
 			path = Storyboards;
 			sourceTree = "<group>";
 		};
+		B8649E2A247FB199005AED48 /* View controllers */ = {
+			isa = PBXGroup;
+			children = (
+				E422DFCC1CEF8AF50047D7A4 /* CameraViewController.swift */,
+			);
+			path = "View controllers";
+			sourceTree = "<group>";
+		};
 		E422DFAE1CEF894F0047D7A4 = {
 			isa = PBXGroup;
 			children = (
@@ -107,9 +115,9 @@
 		E422DFB91CEF894F0047D7A4 /* FilterBrim */ = {
 			isa = PBXGroup;
 			children = (
+				B8649E2A247FB199005AED48 /* View controllers */,
 				B8649E26247FAE74005AED48 /* Storyboards */,
 				E422DFCD1CEF8AF50047D7A4 /* AppDelegate.swift */,
-				E422DFCC1CEF8AF50047D7A4 /* CameraViewController.swift */,
 				E46129031CF4C0B8004FE176 /* PreviewMetalView.swift */,
 				E4E160DA1D00979000C83A5A /* FilterRenderer.swift */,
 				E4E160DC1D0099F100C83A5A /* RosyCIRenderer.swift */,
