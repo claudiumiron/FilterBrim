@@ -101,7 +101,7 @@ class CaptureViewController: UIViewController {
                 
             case .notAuthorized:
                 DispatchQueue.main.async {
-                    let message = NSLocalizedString("AVCamFilter doesn't have permission to use the camera, please change privacy settings",
+                    let message = NSLocalizedString("CameraPermissionDenied",
                                                     comment: "Alert message when the user has denied access to the camera")
                     let actions = [
                         UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"),
