@@ -24,18 +24,11 @@ class CaptureViewController: UIViewController {
     // Communicate with the session and other session objects on this queue.
     private let sessionQueue = DispatchQueue(label: "SessionQueue", attributes: [], autoreleaseFrequency: .workItem)
     
-    private let videoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInDualCamera,
-                                                                                             .builtInWideAngleCamera,
-                                                                                             .builtInTelephotoCamera,
-                                                                                             .builtInTrueDepthCamera],
-                                                                               mediaType: .video,
-                                                                               position: .unspecified)
-    
     private let audioDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInMicrophone],
                                                                                mediaType: .audio,
                                                                                position: .unspecified)
     
-    private var videoInput: AVCaptureDeviceInput!
+    private var videoInputs: AVCaptureSessionVideoInputs!
     
     private let videoFileOutput = AVCaptureMovieFileOutput()
     
@@ -46,7 +39,6 @@ class CaptureViewController: UIViewController {
     @IBOutlet private weak var cameraUnavailableLabel: UILabel!
     @IBOutlet private weak var recordButton: UISwitch!
     @IBOutlet private weak var cameraButton: UIButton!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -172,32 +164,19 @@ class CaptureViewController: UIViewController {
             return
         }
         
-        let defaultVideoDevice = videoDeviceDiscoverySession.devices.first
-        
-        guard let videoDevice = defaultVideoDevice else {
-            print("Could not find any video device")
-            setupResult = .configurationFailed
-            return
-        }
-        
-        guard let videoInput = try? AVCaptureDeviceInput(device: videoDevice) else {
-            print("Could not create video device input")
-            setupResult = .configurationFailed
-            return
-        }
-        self.videoInput = videoInput
-        
         session.beginConfiguration()
         
         session.sessionPreset = AVCaptureSession.Preset.hd1920x1080
         
-        // Add a video input.
-        guard session.canAddInput(videoInput) else {
-            print("Could not add video device input to the session")
+        videoInputs = AVCaptureSessionVideoInputs(with: session)
+        
+        guard let videoInput = videoInputs.availableInputs.first else {
+            print("No suitable video input found")
             setupResult = .configurationFailed
             session.commitConfiguration()
             return
         }
+        
         session.addInput(videoInput)
         
         guard session.canAddOutput(videoFileOutput) else {
@@ -314,9 +293,44 @@ class CaptureViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func didTapCameraButton(_ sender: UIButton) {
+        cameraButton.isEnabled = false
+        recordButton.isEnabled = false
+        
+        sessionQueue.async {
+            let availableSet = Set(self.videoInputs.availableInputs)
+            let sessionSet = Set(self.session.inputs)
+            var intersection = sessionSet.intersection(availableSet)
+            guard intersection.count == 1 else {
+                fatalError("")
+            }
+            
+            let currentVideoInput =
+                intersection.popFirst()! as! AVCaptureDeviceInput
+            let currentVideoInputIndex =
+                self.videoInputs.availableInputs.firstIndex(of: currentVideoInput)!
+            var nextVideoInputIndex = currentVideoInputIndex + 1
+            if nextVideoInputIndex == self.videoInputs.availableInputs.count {
+                nextVideoInputIndex = 0
+            }
+            let nextVideoInput = self.videoInputs.availableInputs[nextVideoInputIndex]
+            
+            self.session.beginConfiguration()
+            
+            // Remove the existing device input first, since using the front and back camera simultaneously is not supported.
+            self.session.removeInput(currentVideoInput)
+            self.session.addInput(nextVideoInput)
+            
+            self.session.commitConfiguration()
+            
+            DispatchQueue.main.async {
+                self.cameraButton.isEnabled = true
+                self.recordButton.isEnabled = true
+            }
+        }
     }
     
     @IBAction func recordStateDidChange(_ sender: UISwitch) {
+        
     }
     
     
@@ -376,7 +390,9 @@ class CaptureViewController: UIViewController {
             let newValue = change?[.newKey] as AnyObject?
             guard let isSessionRunning = newValue?.boolValue else { return }
             DispatchQueue.main.async {
-                self.cameraButton.isEnabled = (isSessionRunning && self.videoDeviceDiscoverySession.devices.count > 1)
+                let videoInputsCount = self.videoInputs.availableInputs.count
+                self.cameraButton.isHidden = videoInputsCount < 2
+                self.cameraButton.isEnabled = isSessionRunning
                 self.recordButton.isEnabled = isSessionRunning
             }
         } else {
@@ -425,7 +441,5 @@ class CaptureViewController: UIViewController {
             
             self.alert(title: "AVCamFilter", message: message, actions: actions)
         }
-    }
-    
     }
 }
