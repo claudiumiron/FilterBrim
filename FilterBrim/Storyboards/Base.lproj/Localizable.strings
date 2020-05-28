@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  FilterBrim
+
+  Created by Claudiu Miron on 28/05/2020.
+  Copyright © 2020 Apple. All rights reserved.
+*/
+
+"CameraPermissionDenied"     = "Allow FilterBrim to access the camera in the privacy settings!";
+"MicrophonePermissionDenied" = "Allow FilterBrim to access the microphone in the privacy settings!";
