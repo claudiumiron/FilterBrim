@@ -14,6 +14,7 @@
 		2672370C1E79BF6E003D2EAA /* RosyEffect.metal in Sources */ = {isa = PBXBuildFile; fileRef = 2672370B1E79BF6E003D2EAA /* RosyEffect.metal */; };
 		2672370E1E79BFC0003D2EAA /* DepthToGrayscale.metal in Sources */ = {isa = PBXBuildFile; fileRef = 2672370D1E79BFBF003D2EAA /* DepthToGrayscale.metal */; };
 		267ED8501ED7974A00898078 /* minMaxFromBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 267ED84E1ED7965B00898078 /* minMaxFromBuffer.m */; };
+		B8649E29247FAF0B005AED48 /* Capture.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B8649E27247FAF0B005AED48 /* Capture.storyboard */; };
 		E422DFC01CEF894F0047D7A4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E422DFBE1CEF894F0047D7A4 /* Main.storyboard */; };
 		E422DFC21CEF894F0047D7A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E422DFC11CEF894F0047D7A4 /* Assets.xcassets */; };
 		E422DFC51CEF894F0047D7A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E422DFC31CEF894F0047D7A4 /* LaunchScreen.storyboard */; };
@@ -35,6 +36,7 @@
 		267ED84D1ED7965A00898078 /* FilterBrim-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FilterBrim-Bridging-Header.h"; sourceTree = "<group>"; };
 		267ED84E1ED7965B00898078 /* minMaxFromBuffer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = minMaxFromBuffer.m; sourceTree = "<group>"; };
 		267ED84F1ED7965B00898078 /* minMaxFromBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = minMaxFromBuffer.h; sourceTree = "<group>"; };
+		B8649E28247FAF0B005AED48 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Capture.storyboard; sourceTree = "<group>"; };
 		E414FC6C1D5921FD0007C979 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E422DFB71CEF894F0047D7A4 /* FilterBrim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FilterBrim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E422DFBF1CEF894F0047D7A4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			children = (
 				E422DFC31CEF894F0047D7A4 /* LaunchScreen.storyboard */,
 				E422DFBE1CEF894F0047D7A4 /* Main.storyboard */,
+				B8649E27247FAF0B005AED48 /* Capture.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -202,6 +205,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E422DFC51CEF894F0047D7A4 /* LaunchScreen.storyboard in Resources */,
+				B8649E29247FAF0B005AED48 /* Capture.storyboard in Resources */,
 				E422DFC21CEF894F0047D7A4 /* Assets.xcassets in Resources */,
 				E422DFC01CEF894F0047D7A4 /* Main.storyboard in Resources */,
 			);
@@ -233,6 +237,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		B8649E27247FAF0B005AED48 /* Capture.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B8649E28247FAF0B005AED48 /* Base */,
+			);
+			name = Capture.storyboard;
+			sourceTree = "<group>";
+		};
 		E422DFBE1CEF894F0047D7A4 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
