@@ -18,6 +18,8 @@
 		B8649E2C247FB1E9005AED48 /* CaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8649E2B247FB1E9005AED48 /* CaptureViewController.swift */; };
 		B8E70389247FB64C00F5AE44 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B8E70387247FB64C00F5AE44 /* Localizable.strings */; };
 		B8E7038B247FEE0E00F5AE44 /* AVCaptureSessionVideoInputs.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8E7038A247FEE0E00F5AE44 /* AVCaptureSessionVideoInputs.swift */; };
+		B8E7038D24800E3200F5AE44 /* CompositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8E7038C24800E3200F5AE44 /* CompositionViewController.swift */; };
+		B8E7039224800E5600F5AE44 /* Composition.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B8E7039024800E5600F5AE44 /* Composition.storyboard */; };
 		E422DFC01CEF894F0047D7A4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E422DFBE1CEF894F0047D7A4 /* Main.storyboard */; };
 		E422DFC21CEF894F0047D7A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E422DFC11CEF894F0047D7A4 /* Assets.xcassets */; };
 		E422DFC51CEF894F0047D7A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E422DFC31CEF894F0047D7A4 /* LaunchScreen.storyboard */; };
@@ -43,6 +45,8 @@
 		B8649E2B247FB1E9005AED48 /* CaptureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureViewController.swift; sourceTree = "<group>"; };
 		B8E70388247FB64C00F5AE44 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = FilterBrim/Storyboards/Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B8E7038A247FEE0E00F5AE44 /* AVCaptureSessionVideoInputs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCaptureSessionVideoInputs.swift; sourceTree = "<group>"; };
+		B8E7038C24800E3200F5AE44 /* CompositionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionViewController.swift; sourceTree = "<group>"; };
+		B8E7039124800E5600F5AE44 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Composition.storyboard; sourceTree = "<group>"; };
 		E414FC6C1D5921FD0007C979 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E422DFB71CEF894F0047D7A4 /* FilterBrim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FilterBrim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E422DFBF1CEF894F0047D7A4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -87,6 +91,7 @@
 				E422DFC31CEF894F0047D7A4 /* LaunchScreen.storyboard */,
 				E422DFBE1CEF894F0047D7A4 /* Main.storyboard */,
 				B8649E27247FAF0B005AED48 /* Capture.storyboard */,
+				B8E7039024800E5600F5AE44 /* Composition.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -96,6 +101,7 @@
 			children = (
 				E422DFCC1CEF8AF50047D7A4 /* CameraViewController.swift */,
 				B8649E2B247FB1E9005AED48 /* CaptureViewController.swift */,
+				B8E7038C24800E3200F5AE44 /* CompositionViewController.swift */,
 			);
 			path = "View controllers";
 			sourceTree = "<group>";
@@ -222,6 +228,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E70389247FB64C00F5AE44 /* Localizable.strings in Resources */,
+				B8E7039224800E5600F5AE44 /* Composition.storyboard in Resources */,
 				E422DFC51CEF894F0047D7A4 /* LaunchScreen.storyboard in Resources */,
 				B8649E29247FAF0B005AED48 /* Capture.storyboard in Resources */,
 				E422DFC21CEF894F0047D7A4 /* Assets.xcassets in Resources */,
@@ -249,6 +256,7 @@
 				2633CF1D1E7C65D500FC80E1 /* DepthToGrayscaleConverter.swift in Sources */,
 				2672370E1E79BFC0003D2EAA /* DepthToGrayscale.metal in Sources */,
 				E46129041CF4C0B8004FE176 /* PreviewMetalView.swift in Sources */,
+				B8E7038D24800E3200F5AE44 /* CompositionViewController.swift in Sources */,
 				B8E7038B247FEE0E00F5AE44 /* AVCaptureSessionVideoInputs.swift in Sources */,
 				E422DFCE1CEF8AF50047D7A4 /* CameraViewController.swift in Sources */,
 			);
@@ -271,6 +279,14 @@
 				B8E70388247FB64C00F5AE44 /* Base */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		B8E7039024800E5600F5AE44 /* Composition.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B8E7039124800E5600F5AE44 /* Base */,
+			);
+			name = Composition.storyboard;
 			sourceTree = "<group>";
 		};
 		E422DFBE1CEF894F0047D7A4 /* Main.storyboard */ = {
