@@ -11,26 +11,65 @@
         <!--Capture View Controller-->
         <scene sceneID="okb-4F-36b">
             <objects>
-                <viewController interfaceStyle="dark" id="K6v-K7-AGl" customClass="CaptureViewController" customModule="FilterBrim" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="K6v-K7-AGl" customClass="CaptureViewController" customModule="FilterBrim" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="IMX-gS-fck">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ny9-SH-SF4">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cj5-Bn-225">
+                                <rect key="frame" x="179.5" y="433" width="55" height="30"/>
+                                <state key="normal" title="Resume"/>
+                                <connections>
+                                    <action selector="didTapResumeButton:" destination="K6v-K7-AGl" eventType="touchUpInside" id="eki-V5-zTN"/>
+                                </connections>
+                            </button>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Camera unavailable!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dOn-5K-kOb">
+                                <rect key="frame" x="129.5" y="437.5" width="155" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="ceC-us-rJf">
+                                <rect key="frame" x="182.5" y="799" width="51" height="31"/>
+                                <color key="onTintColor" systemColor="systemOrangeColor" red="1" green="0.58431372550000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="thumbTintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="recordStateDidChange:" destination="K6v-K7-AGl" eventType="valueChanged" id="PmN-JN-vk4"/>
+                                </connections>
+                            </switch>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jU0-iv-orl">
+                                <rect key="frame" x="335" y="69" width="54" height="30"/>
+                                <state key="normal" title="Camera"/>
+                                <connections>
+                                    <action selector="didTapCameraButton:" destination="K6v-K7-AGl" eventType="touchUpInside" id="a1p-eU-IS8"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="2m3-Yh-4T0" firstAttribute="trailing" secondItem="jU0-iv-orl" secondAttribute="trailing" constant="25" id="5GT-1z-BTe"/>
+                            <constraint firstItem="ceC-us-rJf" firstAttribute="centerX" secondItem="IMX-gS-fck" secondAttribute="centerX" id="6fo-IS-dcG"/>
+                            <constraint firstItem="dOn-5K-kOb" firstAttribute="centerX" secondItem="IMX-gS-fck" secondAttribute="centerX" id="7Hz-sK-0js"/>
+                            <constraint firstItem="jU0-iv-orl" firstAttribute="top" secondItem="2m3-Yh-4T0" secondAttribute="top" constant="25" id="IpK-Nr-BsI"/>
+                            <constraint firstItem="2m3-Yh-4T0" firstAttribute="bottom" secondItem="ceC-us-rJf" secondAttribute="bottom" constant="32" id="JfI-ir-5gr"/>
                             <constraint firstAttribute="trailing" secondItem="ny9-SH-SF4" secondAttribute="trailing" id="Mcd-pT-kpd"/>
                             <constraint firstAttribute="bottom" secondItem="ny9-SH-SF4" secondAttribute="bottom" id="P4p-Tx-HwM"/>
+                            <constraint firstItem="cj5-Bn-225" firstAttribute="centerY" secondItem="IMX-gS-fck" secondAttribute="centerY" id="VCA-Mk-zSc"/>
                             <constraint firstItem="ny9-SH-SF4" firstAttribute="leading" secondItem="IMX-gS-fck" secondAttribute="leading" id="YAh-Tp-bT3"/>
+                            <constraint firstItem="dOn-5K-kOb" firstAttribute="centerY" secondItem="IMX-gS-fck" secondAttribute="centerY" id="f6A-HS-8qF"/>
+                            <constraint firstItem="cj5-Bn-225" firstAttribute="centerX" secondItem="IMX-gS-fck" secondAttribute="centerX" id="jpR-he-gtW"/>
                             <constraint firstItem="ny9-SH-SF4" firstAttribute="top" secondItem="IMX-gS-fck" secondAttribute="top" id="lFu-TN-30M"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="2m3-Yh-4T0"/>
                     </view>
                     <connections>
+                        <outlet property="cameraButton" destination="jU0-iv-orl" id="rHU-gX-4dW"/>
+                        <outlet property="cameraUnavailableLabel" destination="dOn-5K-kOb" id="W0P-PV-rgf"/>
+                        <outlet property="recordButton" destination="ceC-us-rJf" id="jAz-LZ-r1v"/>
+                        <outlet property="resumeButton" destination="cj5-Bn-225" id="XgS-PT-dHg"/>
                         <outlet property="videoView" destination="ny9-SH-SF4" id="aoq-ji-Z48"/>
                     </connections>
                 </viewController>

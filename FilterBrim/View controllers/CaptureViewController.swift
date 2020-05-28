@@ -22,9 +22,18 @@ class CaptureViewController: UIViewController {
     private let sessionQueue = DispatchQueue(label: "SessionQueue", attributes: [], autoreleaseFrequency: .workItem)
     
     @IBOutlet weak var videoView: UIView!
+    @IBOutlet private weak var resumeButton: UIButton!
+    @IBOutlet private weak var cameraUnavailableLabel: UILabel!
+    @IBOutlet private weak var recordButton: UISwitch!
+    @IBOutlet private weak var cameraButton: UIButton!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Disable UI. The UI is enabled if and only if the session starts running.
+        cameraButton.isEnabled = false
+        recordButton.isEnabled = false
         
         // Check video authorization status, video access is required
         switch AVCaptureDevice.authorizationStatus(for: .video) {
@@ -49,5 +58,19 @@ class CaptureViewController: UIViewController {
             // The user has previously denied access
             setupResult = .notAuthorized
         }
+    
+    // MARK: - IBActions
+    
+    @IBAction func didTapCameraButton(_ sender: UIButton) {
+    }
+    
+    @IBAction func recordStateDidChange(_ sender: UISwitch) {
+    }
+    
+    
+    @IBAction func didTapResumeButton(_ sender: UIButton) {
+        
+    }
+    
     }
 }
