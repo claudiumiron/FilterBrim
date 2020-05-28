@@ -9,5 +9,6 @@
 import UIKit
 
 class CaptureViewController: UIViewController {
+    @IBOutlet weak var videoView: UIView!
     
 }
