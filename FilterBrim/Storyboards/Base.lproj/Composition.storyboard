@@ -15,11 +15,25 @@
                     <view key="view" contentMode="scaleToFill" id="IVq-xK-p5t">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9lV-OL-Nye">
+                                <rect key="frame" x="350" y="69" width="39" height="30"/>
+                                <state key="normal" title="Close"/>
+                                <connections>
+                                    <segue destination="8w4-lE-bYa" kind="unwind" unwindAction="unwindToCaptureWithSegue:" id="ejf-9t-EgA"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="9lV-OL-Nye" firstAttribute="top" secondItem="cLS-ro-tCG" secondAttribute="top" constant="25" id="5mC-gq-gVh"/>
+                            <constraint firstItem="cLS-ro-tCG" firstAttribute="trailing" secondItem="9lV-OL-Nye" secondAttribute="trailing" constant="25" id="Uda-LY-44Z"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="cLS-ro-tCG"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R85-rN-0Zk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="8w4-lE-bYa" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="139" y="106"/>
         </scene>

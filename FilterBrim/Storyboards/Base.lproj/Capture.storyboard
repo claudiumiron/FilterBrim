@@ -71,11 +71,20 @@
                         <outlet property="recordButton" destination="ceC-us-rJf" id="jAz-LZ-r1v"/>
                         <outlet property="resumeButton" destination="cj5-Bn-225" id="XgS-PT-dHg"/>
                         <outlet property="videoView" destination="ny9-SH-SF4" id="aoq-ji-Z48"/>
+                        <segue destination="CGz-fx-U5D" kind="presentation" identifier="showComposition" id="cLV-oY-86I"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lca-JX-cVa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="106" y="119"/>
+        </scene>
+        <!--Composition-->
+        <scene sceneID="akD-QW-p9N">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Composition" id="CGz-fx-U5D" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cKd-x3-m0r" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1105" y="119"/>
         </scene>
     </scenes>
 </document>

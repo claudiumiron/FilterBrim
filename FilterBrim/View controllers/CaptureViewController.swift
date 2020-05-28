@@ -374,6 +374,16 @@ class CaptureViewController: UIViewController {
                }
     }
     
+    @IBAction func unwindToCapture(segue: UIStoryboardSegue) {
+        tempVideoUrls = []
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let compVC = segue.destination as! CompositionViewController
+        compVC.backgroundVideoUrl = tempVideoUrls.last!
+        compVC.foregroundVideoUrl = tempVideoUrls.first!
+    }
+    
     // MARK: - KVO and Notifications
     
     private var sessionRunningContext = 0
@@ -495,6 +505,10 @@ extension CaptureViewController: AVCaptureFileOutputRecordingDelegate {
         }
         
         tempVideoUrls.append(outputFileURL)
+        
+        if tempVideoUrls.count == 2 {
+            performSegue(withIdentifier: "showComposition", sender: nil)
+        }
     }
     
 }

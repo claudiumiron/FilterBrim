@@ -10,4 +10,13 @@ import UIKit
 
 class CompositionViewController: UIViewController {
     
+    public var backgroundVideoUrl: URL!
+    
+    public var foregroundVideoUrl: URL!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        print("\n\(backgroundVideoUrl.path)\n\(foregroundVideoUrl.path)")
+    }
+    
 }
