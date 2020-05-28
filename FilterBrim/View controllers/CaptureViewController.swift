@@ -335,7 +335,30 @@ class CaptureViewController: UIViewController {
     
     
     @IBAction func didTapResumeButton(_ sender: UIButton) {
-        
+        sessionQueue.async {
+                   /*
+                    The session might fail to start running. A failure to start the session running will be communicated via
+                    a session runtime error notification. To avoid repeatedly failing to start the session
+                    running, we only try to restart the session running in the session runtime error handler
+                    if we aren't trying to resume the session running.
+                    */
+                   self.session.startRunning()
+                   self.isSessionRunning = self.session.isRunning
+                   if !self.session.isRunning {
+                       DispatchQueue.main.async {
+                           let message = NSLocalizedString("Unable to resume", comment: "Alert message when unable to resume the session running")
+                           let actions = [
+                               UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"),
+                                             style: .cancel,
+                                             handler: nil)]
+                           self.alert(title: "FilterBrim", message: message, actions: actions)
+                       }
+                   } else {
+                       DispatchQueue.main.async {
+                           self.resumeButton.isHidden = true
+                       }
+                   }
+               }
     }
     
     // MARK: - KVO and Notifications
@@ -439,7 +462,7 @@ class CaptureViewController: UIViewController {
                               style: .cancel,
                               handler: nil)]
             
-            self.alert(title: "AVCamFilter", message: message, actions: actions)
+            self.alert(title: "FilterBrim", message: message, actions: actions)
         }
     }
 }
