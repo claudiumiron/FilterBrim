@@ -16,6 +16,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wGi-Hg-wTi">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9lV-OL-Nye">
                                 <rect key="frame" x="350" y="69" width="39" height="30"/>
                                 <state key="normal" title="Close"/>
@@ -27,10 +30,17 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="9lV-OL-Nye" firstAttribute="top" secondItem="cLS-ro-tCG" secondAttribute="top" constant="25" id="5mC-gq-gVh"/>
+                            <constraint firstAttribute="bottom" secondItem="wGi-Hg-wTi" secondAttribute="bottom" id="5yv-qz-o9L"/>
+                            <constraint firstItem="wGi-Hg-wTi" firstAttribute="top" secondItem="IVq-xK-p5t" secondAttribute="top" id="T6a-Wr-KNP"/>
                             <constraint firstItem="cLS-ro-tCG" firstAttribute="trailing" secondItem="9lV-OL-Nye" secondAttribute="trailing" constant="25" id="Uda-LY-44Z"/>
+                            <constraint firstItem="wGi-Hg-wTi" firstAttribute="leading" secondItem="IVq-xK-p5t" secondAttribute="leading" id="qv4-Je-QB7"/>
+                            <constraint firstAttribute="trailing" secondItem="wGi-Hg-wTi" secondAttribute="trailing" id="twJ-Xx-DCe"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="cLS-ro-tCG"/>
                     </view>
+                    <connections>
+                        <outlet property="previewView" destination="wGi-Hg-wTi" id="jDm-xV-fVW"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R85-rN-0Zk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="8w4-lE-bYa" userLabel="Exit" sceneMemberID="exit"/>

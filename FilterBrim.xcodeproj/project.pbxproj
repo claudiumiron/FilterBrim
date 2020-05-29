@@ -20,6 +20,7 @@
 		B8E7038B247FEE0E00F5AE44 /* AVCaptureSessionVideoInputs.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8E7038A247FEE0E00F5AE44 /* AVCaptureSessionVideoInputs.swift */; };
 		B8E7038D24800E3200F5AE44 /* CompositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8E7038C24800E3200F5AE44 /* CompositionViewController.swift */; };
 		B8E7039224800E5600F5AE44 /* Composition.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B8E7039024800E5600F5AE44 /* Composition.storyboard */; };
+		B8E703952480213F00F5AE44 /* AVAsset+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8E703942480213F00F5AE44 /* AVAsset+Convenience.swift */; };
 		E422DFC01CEF894F0047D7A4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E422DFBE1CEF894F0047D7A4 /* Main.storyboard */; };
 		E422DFC21CEF894F0047D7A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E422DFC11CEF894F0047D7A4 /* Assets.xcassets */; };
 		E422DFC51CEF894F0047D7A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E422DFC31CEF894F0047D7A4 /* LaunchScreen.storyboard */; };
@@ -47,6 +48,7 @@
 		B8E7038A247FEE0E00F5AE44 /* AVCaptureSessionVideoInputs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCaptureSessionVideoInputs.swift; sourceTree = "<group>"; };
 		B8E7038C24800E3200F5AE44 /* CompositionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionViewController.swift; sourceTree = "<group>"; };
 		B8E7039124800E5600F5AE44 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Composition.storyboard; sourceTree = "<group>"; };
+		B8E703942480213F00F5AE44 /* AVAsset+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVAsset+Convenience.swift"; sourceTree = "<group>"; };
 		E414FC6C1D5921FD0007C979 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E422DFB71CEF894F0047D7A4 /* FilterBrim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FilterBrim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E422DFBF1CEF894F0047D7A4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -106,6 +108,14 @@
 			path = "View controllers";
 			sourceTree = "<group>";
 		};
+		B8E70393248020EF00F5AE44 /* Video composition */ = {
+			isa = PBXGroup;
+			children = (
+				B8E703942480213F00F5AE44 /* AVAsset+Convenience.swift */,
+			);
+			path = "Video composition";
+			sourceTree = "<group>";
+		};
 		E422DFAE1CEF894F0047D7A4 = {
 			isa = PBXGroup;
 			children = (
@@ -129,6 +139,7 @@
 		E422DFB91CEF894F0047D7A4 /* FilterBrim */ = {
 			isa = PBXGroup;
 			children = (
+				B8E70393248020EF00F5AE44 /* Video composition */,
 				B8649E2A247FB199005AED48 /* View controllers */,
 				B8649E26247FAE74005AED48 /* Storyboards */,
 				E422DFCD1CEF8AF50047D7A4 /* AppDelegate.swift */,
@@ -249,6 +260,7 @@
 				2608B7DB1E70937A00A7310F /* RosyMetalRenderer.swift in Sources */,
 				E4E160DD1D0099F100C83A5A /* RosyCIRenderer.swift in Sources */,
 				E4A8A1421CF6188A006823AB /* PassThrough.metal in Sources */,
+				B8E703952480213F00F5AE44 /* AVAsset+Convenience.swift in Sources */,
 				E422DFCF1CEF8AF50047D7A4 /* AppDelegate.swift in Sources */,
 				267ED8501ED7974A00898078 /* minMaxFromBuffer.m in Sources */,
 				2672370C1E79BF6E003D2EAA /* RosyEffect.metal in Sources */,

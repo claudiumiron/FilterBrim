@@ -168,7 +168,15 @@ class CaptureViewController: UIViewController {
         
         session.beginConfiguration()
         
-        session.sessionPreset = AVCaptureSession.Preset.hd1920x1080
+        let preset = AVCaptureSession.Preset.hd1920x1080
+        
+        guard session.canSetSessionPreset(preset) else {
+            print("Can't set session preset")
+            setupResult = .configurationFailed
+            session.commitConfiguration()
+            return
+        }
+        session.sessionPreset = preset
         
         videoInputs = AVCaptureSessionVideoInputs(with: session)
         
@@ -188,6 +196,22 @@ class CaptureViewController: UIViewController {
             return
         }
         session.addOutput(videoFileOutput)
+        
+        guard let fileConnection = videoFileOutput.connection(with: .video) else {
+            print("No video file output connection!")
+            setupResult = .configurationFailed
+            session.commitConfiguration()
+            return
+        }
+        
+        guard fileConnection.isVideoOrientationSupported else {
+            print("Cannot set orientation!")
+            setupResult = .configurationFailed
+            session.commitConfiguration()
+            return
+        }
+        fileConnection.videoOrientation = .portrait
+        
         
         if let audioDevice = audioDeviceDiscoverySession.devices.first {
             if let audioInput = try? AVCaptureDeviceInput(device: audioDevice) {
@@ -335,9 +359,12 @@ class CaptureViewController: UIViewController {
         if sender.isOn {
             var urlCount = tempVideoUrls.count
             urlCount += 1
-            let tempFolderUrl = URL(fileURLWithPath: NSTemporaryDirectory())
-            let tempVideoUrl =
-                tempFolderUrl.appendingPathComponent("temp\(urlCount)")
+            let tempFolderPath =
+                NSSearchPathForDirectoriesInDomains(.documentDirectory,
+                                                    .userDomainMask,
+                                                    true).first!
+            let videoPath = tempFolderPath.appending("/temp\(urlCount).mov")
+            let tempVideoUrl = URL(fileURLWithPath: videoPath)
             videoFileOutput.startRecording(to: tempVideoUrl,
                                            recordingDelegate: self)
         } else {
@@ -501,10 +528,13 @@ extension CaptureViewController: AVCaptureFileOutputRecordingDelegate {
         }
         
         guard error == nil else {
+            print("did finish recording \(error!.localizedDescription)")
             return
         }
         
         tempVideoUrls.append(outputFileURL)
+        
+        print("written \(outputFileURL)")
         
         if tempVideoUrls.count == 2 {
             performSegue(withIdentifier: "showComposition", sender: nil)
