@@ -77,7 +77,7 @@ class CompositionViewController: UIViewController {
         let compFgVideoTrack = composition.addMutableTrack(withMediaType: .video,
                                                            preferredTrackID: 2)!
         let assetFgVideoTrack = fgAsset.firstVideoTrack!
-        //compFgVideoTrack.preferredTransform = assetFgVideoTrack.preferredTransform
+        compFgVideoTrack.preferredTransform = assetFgVideoTrack.preferredTransform
         let compFgAudioTrack = composition.addMutableTrack(withMediaType: .audio,
                                                            preferredTrackID: 2)!
         let assetFgAudioTrack = fgAsset.firstAudioTrack!
