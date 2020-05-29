@@ -21,6 +21,7 @@
 		B8E7038D24800E3200F5AE44 /* CompositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8E7038C24800E3200F5AE44 /* CompositionViewController.swift */; };
 		B8E7039224800E5600F5AE44 /* Composition.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B8E7039024800E5600F5AE44 /* Composition.storyboard */; };
 		B8E703952480213F00F5AE44 /* AVAsset+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8E703942480213F00F5AE44 /* AVAsset+Convenience.swift */; };
+		B8E703972481580E00F5AE44 /* PostGrotesk-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B8E703962481580D00F5AE44 /* PostGrotesk-Bold.otf */; };
 		E422DFC01CEF894F0047D7A4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E422DFBE1CEF894F0047D7A4 /* Main.storyboard */; };
 		E422DFC21CEF894F0047D7A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E422DFC11CEF894F0047D7A4 /* Assets.xcassets */; };
 		E422DFC51CEF894F0047D7A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E422DFC31CEF894F0047D7A4 /* LaunchScreen.storyboard */; };
@@ -49,6 +50,7 @@
 		B8E7038C24800E3200F5AE44 /* CompositionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionViewController.swift; sourceTree = "<group>"; };
 		B8E7039124800E5600F5AE44 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Composition.storyboard; sourceTree = "<group>"; };
 		B8E703942480213F00F5AE44 /* AVAsset+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVAsset+Convenience.swift"; sourceTree = "<group>"; };
+		B8E703962481580D00F5AE44 /* PostGrotesk-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PostGrotesk-Bold.otf"; sourceTree = "<group>"; };
 		E414FC6C1D5921FD0007C979 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E422DFB71CEF894F0047D7A4 /* FilterBrim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FilterBrim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E422DFBF1CEF894F0047D7A4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -116,6 +118,14 @@
 			path = "Video composition";
 			sourceTree = "<group>";
 		};
+		B8E703982481581200F5AE44 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				B8E703962481580D00F5AE44 /* PostGrotesk-Bold.otf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		E422DFAE1CEF894F0047D7A4 = {
 			isa = PBXGroup;
 			children = (
@@ -139,6 +149,7 @@
 		E422DFB91CEF894F0047D7A4 /* FilterBrim */ = {
 			isa = PBXGroup;
 			children = (
+				B8E703982481581200F5AE44 /* Fonts */,
 				B8E70393248020EF00F5AE44 /* Video composition */,
 				B8649E2A247FB199005AED48 /* View controllers */,
 				B8649E26247FAE74005AED48 /* Storyboards */,
@@ -243,6 +254,7 @@
 				E422DFC51CEF894F0047D7A4 /* LaunchScreen.storyboard in Resources */,
 				B8649E29247FAF0B005AED48 /* Capture.storyboard in Resources */,
 				E422DFC21CEF894F0047D7A4 /* Assets.xcassets in Resources */,
+				B8E703972481580E00F5AE44 /* PostGrotesk-Bold.otf in Resources */,
 				E422DFC01CEF894F0047D7A4 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
