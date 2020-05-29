@@ -24,19 +24,19 @@ class CaptureViewController: UIViewController {
     // Communicate with the session and other session objects on this queue.
     private let sessionQueue = DispatchQueue(label: "SessionQueue", attributes: [], autoreleaseFrequency: .workItem)
     
-    private let audioDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInMicrophone],
-                                                                               mediaType: .audio,
-                                                                               position: .unspecified)
+    private let dataOutputQueue = DispatchQueue(label: "VideoDataQueue", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem)
     
     private var videoInputs: AVCaptureSessionVideoInputs!
     
-    private let videoFileOutput = AVCaptureMovieFileOutput()
+    private let videoDataOutput = AVCaptureVideoDataOutput()
     
     private var tempVideoUrls: [URL] = []
     
     private var isSessionRunning = false
     
-    @IBOutlet private weak var videoView: UIView!
+    private var renderingEnabled = true
+    
+    @IBOutlet private weak var videoView: PreviewMetalView!
     @IBOutlet private weak var resumeButton: UIButton!
     @IBOutlet private weak var cameraUnavailableLabel: UILabel!
     @IBOutlet private weak var recordButton: UISwitch!
@@ -44,6 +44,9 @@ class CaptureViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        #warning("Enable recording some time in the future!")
+        recordButton.isHidden = true
         
         // Disable UI. The UI is enabled if and only if the session starts running.
         cameraButton.isEnabled = false
@@ -90,16 +93,29 @@ class CaptureViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        let interfaceOrientation = UIApplication.shared.statusBarOrientation
+        
         sessionQueue.async {
             switch self.setupResult {
             case .success:
                 self.addObservers()
                 
-                self.session.startRunning()
-                
-                DispatchQueue.main.async {
-                    self.setupLivePreview(session: self.session)
+                if let unwrappedVideoDataOutputConnection = self.videoDataOutput.connection(with: .video) {
+                    let videoDevicePosition = self.currentVideoDeviceInput().device.position
+                    let rotation = PreviewMetalView.Rotation(with: interfaceOrientation,
+                                                             videoOrientation: unwrappedVideoDataOutputConnection.videoOrientation,
+                                                             cameraPosition: videoDevicePosition)
+                    self.videoView.mirroring = (videoDevicePosition == .front)
+                    if let rotation = rotation {
+                        self.videoView.rotation = rotation
+                    }
                 }
+                
+                self.dataOutputQueue.async {
+                    self.renderingEnabled = true
+                }
+                self.session.startRunning()
+                self.isSessionRunning = self.session.isRunning
                 
             case .notAuthorized:
                 DispatchQueue.main.async {
@@ -138,6 +154,9 @@ class CaptureViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        dataOutputQueue.async {
+            self.renderingEnabled = false
+        }
         sessionQueue.async {
             if self.setupResult == .success {
                 self.session.stopRunning()
@@ -157,6 +176,18 @@ class CaptureViewController: UIViewController {
         videoPreviewLayer.connection?.videoOrientation = .portrait
         videoView.layer.addSublayer(videoPreviewLayer)
         videoPreviewLayer.frame = videoView.bounds
+    }
+    
+    func renderVideo(sampleBuffer: CMSampleBuffer) {
+        if !renderingEnabled {
+            return
+        }
+        
+        guard let videoPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+                return
+        }
+        
+        videoView.pixelBuffer = videoPixelBuffer
     }
     
     // MARK: - Session management
@@ -186,39 +217,18 @@ class CaptureViewController: UIViewController {
             session.commitConfiguration()
             return
         }
-        
         session.addInput(videoInput)
         
-        guard session.canAddOutput(videoFileOutput) else {
-            print("Could not add video file output to the session")
+        // Add a video data output
+        if session.canAddOutput(videoDataOutput) {
+            session.addOutput(videoDataOutput)
+            videoDataOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)]
+            videoDataOutput.setSampleBufferDelegate(self, queue: dataOutputQueue)
+        } else {
+            print("Could not add video data output to the session")
             setupResult = .configurationFailed
             session.commitConfiguration()
             return
-        }
-        session.addOutput(videoFileOutput)
-        
-        guard let fileConnection = videoFileOutput.connection(with: .video) else {
-            print("No video file output connection!")
-            setupResult = .configurationFailed
-            session.commitConfiguration()
-            return
-        }
-        
-        guard fileConnection.isVideoOrientationSupported else {
-            print("Cannot set orientation!")
-            setupResult = .configurationFailed
-            session.commitConfiguration()
-            return
-        }
-        fileConnection.videoOrientation = .portrait
-        
-        
-        if let audioDevice = audioDeviceDiscoverySession.devices.first {
-            if let audioInput = try? AVCaptureDeviceInput(device: audioDevice) {
-                if session.canAddInput(audioInput) {
-                    session.addInput(audioInput)
-                }
-            }
         }
         
         session.commitConfiguration()
@@ -315,23 +325,33 @@ class CaptureViewController: UIViewController {
         
         self.present(alertController, animated: true, completion: nil)
     }
-
+    
+    func currentVideoDeviceInput() -> AVCaptureDeviceInput {
+        let availableSet = Set(self.videoInputs.availableInputs)
+        let sessionSet = Set(self.session.inputs)
+        var intersection = sessionSet.intersection(availableSet)
+        guard intersection.count == 1 else {
+            fatalError("")
+        }
+        
+        return intersection.popFirst()! as! AVCaptureDeviceInput
+    }
+    
     // MARK: - IBActions
     
     @IBAction func didTapCameraButton(_ sender: UIButton) {
         cameraButton.isEnabled = false
         recordButton.isEnabled = false
         
+        let interfaceOrientation = UIApplication.shared.statusBarOrientation
+        
+        dataOutputQueue.sync {
+            renderingEnabled = false
+            videoView.pixelBuffer = nil
+        }
+        
         sessionQueue.async {
-            let availableSet = Set(self.videoInputs.availableInputs)
-            let sessionSet = Set(self.session.inputs)
-            var intersection = sessionSet.intersection(availableSet)
-            guard intersection.count == 1 else {
-                fatalError("")
-            }
-            
-            let currentVideoInput =
-                intersection.popFirst()! as! AVCaptureDeviceInput
+            let currentVideoInput = self.currentVideoDeviceInput()
             let currentVideoInputIndex =
                 self.videoInputs.availableInputs.firstIndex(of: currentVideoInput)!
             var nextVideoInputIndex = currentVideoInputIndex + 1
@@ -347,6 +367,23 @@ class CaptureViewController: UIViewController {
             self.session.addInput(nextVideoInput)
             
             self.session.commitConfiguration()
+            
+            let videoPosition = currentVideoInput.device.position
+            
+            if let unwrappedVideoDataOutputConnection = self.videoDataOutput.connection(with: .video) {
+                let rotation = PreviewMetalView.Rotation(with: interfaceOrientation,
+                                                         videoOrientation: unwrappedVideoDataOutputConnection.videoOrientation,
+                                                         cameraPosition: videoPosition)
+                
+                self.videoView.mirroring = (videoPosition == .front)
+                if let rotation = rotation {
+                    self.videoView.rotation = rotation
+                }
+            }
+            
+            self.dataOutputQueue.async {
+                self.renderingEnabled = true
+            }
             
             DispatchQueue.main.async {
                 self.cameraButton.isEnabled = true
@@ -365,11 +402,10 @@ class CaptureViewController: UIViewController {
                                                     true).first!
             let videoPath = tempFolderPath.appending("/temp\(urlCount).mov")
             let tempVideoUrl = URL(fileURLWithPath: videoPath)
-            videoFileOutput.startRecording(to: tempVideoUrl,
-                                           recordingDelegate: self)
+            
         } else {
             recordButton.isEnabled = false
-            videoFileOutput.stopRecording()
+            
         }
     }
     
@@ -477,12 +513,18 @@ class CaptureViewController: UIViewController {
     
     @objc
     func didEnterBackground(notification: NSNotification) {
-        
+        dataOutputQueue.async {
+            self.renderingEnabled = false
+            self.videoView.pixelBuffer = nil
+            self.videoView.flushTextureCache()
+        }
     }
     
     @objc
     func willEnterForground(notification: NSNotification) {
-        
+        dataOutputQueue.async {
+            self.renderingEnabled = true
+        }
     }
     
     // Use this opportunity to take corrective action to help cool the system down.
@@ -517,28 +559,10 @@ class CaptureViewController: UIViewController {
     }
 }
 
-extension CaptureViewController: AVCaptureFileOutputRecordingDelegate {
-    
-    func fileOutput(_ output: AVCaptureFileOutput,
-                    didFinishRecordingTo outputFileURL: URL,
-                    from connections: [AVCaptureConnection],
-                    error: Error?) {
-        DispatchQueue.main.async {
-            self.recordButton.isEnabled = true
-        }
-        
-        guard error == nil else {
-            print("did finish recording \(error!.localizedDescription)")
-            return
-        }
-        
-        tempVideoUrls.append(outputFileURL)
-        
-        print("written \(outputFileURL)")
-        
-        if tempVideoUrls.count == 2 {
-            performSegue(withIdentifier: "showComposition", sender: nil)
-        }
+extension CaptureViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
+    func captureOutput(_ output: AVCaptureOutput,
+                       didOutput sampleBuffer: CMSampleBuffer,
+                       from connection: AVCaptureConnection) {
+        renderVideo(sampleBuffer: sampleBuffer)
     }
-    
 }
