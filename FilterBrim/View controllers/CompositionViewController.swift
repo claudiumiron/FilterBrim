@@ -33,17 +33,17 @@ class CompositionViewController: UIViewController {
         let bgAsset = AVAsset(url: backgroundVideoUrl)
         bgAsset.prepare(properties: ["tracks", "duration"]) {
             self.bgAsset = bgAsset
-            self.tracksLoaded()
+            self.assetLoaded()
         }
         
         let fgAsset = AVAsset(url: foregroundVideoUrl)
         fgAsset.prepare(properties: ["tracks", "duration"]) {
             self.fgAsset = fgAsset
-            self.tracksLoaded()
+            self.assetLoaded()
         }
     }
     
-    private func tracksLoaded() {
+    private func assetLoaded() {
         guard let bgAsset = bgAsset, let fgAsset = fgAsset else {
             return
         }
@@ -51,8 +51,6 @@ class CompositionViewController: UIViewController {
         guard (bgAsset.duration.isNumeric && fgAsset.duration.isNumeric) else {
             return
         }
-        
-        print("AMKING COMP!")
         
         var timeRange = CMTimeRange()
         timeRange.start = .zero
@@ -100,9 +98,14 @@ class CompositionViewController: UIViewController {
         player.play()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         playerLayer?.frame = previewView.bounds
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
     }
     
 }
