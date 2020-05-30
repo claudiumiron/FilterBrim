@@ -16,7 +16,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wGi-Hg-wTi">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wGi-Hg-wTi" customClass="PreviewMetalView" customModule="FilterBrim" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <color key="backgroundColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
@@ -40,7 +40,7 @@
                         <viewLayoutGuide key="safeArea" id="cLS-ro-tCG"/>
                     </view>
                     <connections>
-                        <outlet property="previewView" destination="wGi-Hg-wTi" id="jDm-xV-fVW"/>
+                        <outlet property="previewView" destination="wGi-Hg-wTi" id="Gdn-ed-iTq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R85-rN-0Zk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

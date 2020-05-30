@@ -206,14 +206,6 @@ class CaptureViewController: UIViewController {
     
     // MARK: - Screen rendering
     
-    func setupLivePreview(session: AVCaptureSession) {
-        let videoPreviewLayer = AVCaptureVideoPreviewLayer(session: session)
-        videoPreviewLayer.videoGravity = .resizeAspectFill
-        videoPreviewLayer.connection?.videoOrientation = .portrait
-        videoView.layer.addSublayer(videoPreviewLayer)
-        videoPreviewLayer.frame = videoView.bounds
-    }
-    
     func renderVideo(sampleBuffer: CMSampleBuffer) {
         if !renderingEnabled {
             return

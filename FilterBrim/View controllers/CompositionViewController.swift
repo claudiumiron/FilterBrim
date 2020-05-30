@@ -19,15 +19,19 @@ class CompositionViewController: UIViewController {
     
     private let videoComposition = AVMutableVideoComposition()
     
+    private let dataOutputQueue = DispatchQueue(label: "VideoDataQueue", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem)
+    
+    private var videoOutput: AVPlayerItemVideoOutput!
+    
     private var bgAsset: AVAsset?
     
     private var fgAsset: AVAsset?
     
-    private var playerLooper: AVPlayerLooper!
+    private var player: AVPlayer!
     
-    private var playerLayer: AVPlayerLayer?
+    private var displayLink: CADisplayLink!
     
-    @IBOutlet private weak var previewView: UIView!
+    @IBOutlet private weak var previewView: PreviewMetalView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -109,37 +113,59 @@ class CompositionViewController: UIViewController {
         instruction.layerInstructions = [fgInstruction, bgInstruction]
         videoComposition.instructions = [instruction]
         
-        let playerItem = AVPlayerItem(asset: composition)
-        //playerItem.customVideoCompositor
-        playerItem.videoComposition = videoComposition
-        
-        let player = AVQueuePlayer(playerItem: playerItem)
-        playerLayer = AVPlayerLayer(player: player)
-        playerLayer!.videoGravity = .resizeAspect
-        playerLayer!.backgroundColor = UIColor.green.cgColor
-        DispatchQueue.main.async {
-            self.previewView.layer.addSublayer(self.playerLayer!)
+        dataOutputQueue.async {
+            let settings =
+                [kCVPixelBufferPixelFormatTypeKey as String : Int(kCVPixelFormatType_32BGRA)]
+            self.videoOutput = AVPlayerItemVideoOutput(pixelBufferAttributes: settings)
+            
+            let playerItem = AVPlayerItem(asset: self.composition)
+            //playerItem.customVideoCompositor
+            playerItem.videoComposition = self.videoComposition
+            playerItem.add(self.videoOutput)
+            
+            self.player = AVPlayer(playerItem: playerItem)
+            self.player.actionAtItemEnd = .none
+            self.player.play()
+            
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(self.playerItemDidFinish(notification:)),
+                                                   name: .AVPlayerItemDidPlayToEndTime,
+                                                   object: playerItem)
+            
+            self.displayLink = CADisplayLink(target: self,
+                                            selector: #selector(self.displayLinkUpdate))
+            self.displayLink.add(to: .main, forMode: .common)
         }
-        playerLooper = AVPlayerLooper(player: player,
-                                      templateItem: playerItem)
-        playerLooper.status
         
-        player.play()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        playerLayer?.frame = previewView.bounds
+    @objc func playerItemDidFinish(notification: Notification) {
+        let item = notification.object as! AVPlayerItem
+        item.seek(to: .zero, completionHandler: nil)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        playerLayer?.frame = previewView.bounds
+    @objc func displayLinkUpdate() {
+        dataOutputQueue.async {
+            guard let item = self.player.currentItem else {
+                return
+            }
+            
+            let buffer =
+                self.videoOutput.copyPixelBuffer(forItemTime: item.currentTime(),
+                                                 itemTimeForDisplay:nil)
+            if let unwrappedBuffer = buffer {
+                self.previewView.pixelBuffer = unwrappedBuffer
+            }
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        self.displayLink.remove(from: .main, forMode: .common)
     }
     
 }
