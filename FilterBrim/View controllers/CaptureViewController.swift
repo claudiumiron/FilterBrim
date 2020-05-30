@@ -26,11 +26,14 @@ class CaptureViewController: UIViewController {
     
     private let dataOutputQueue = DispatchQueue(label: "VideoDataQueue", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem)
     
+    private let writeOutputQueue = DispatchQueue(label: "WriteDataQueue", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem)
+    
     private var videoInputs: AVCaptureSessionVideoInputs!
     
     private let videoDataOutput = AVCaptureVideoDataOutput()
     
-    private var tempVideoUrls: [URL] = []
+    private var assetWriters: [AVAssetWriter] = []
+    private var assetWriterTimes: [CMTime] = []
     
     private var isSessionRunning = false
     
@@ -44,9 +47,6 @@ class CaptureViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        #warning("Enable recording some time in the future!")
-        recordButton.isHidden = true
         
         // Disable UI. The UI is enabled if and only if the session starts running.
         cameraButton.isEnabled = false
@@ -190,6 +190,34 @@ class CaptureViewController: UIViewController {
         videoView.pixelBuffer = videoPixelBuffer
     }
     
+    // MARK: - Video file writing
+    
+    func writeSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
+        guard assetWriters.count > 0 else {
+            return
+        }
+        
+        let writer = assetWriters.last!
+        
+        guard writer.status == .writing else {
+            return
+        }
+        
+        let writerInput = writer.inputs.first!
+        guard writerInput.isReadyForMoreMediaData else {
+            return
+        }
+        
+        let index = assetWriters.firstIndex(of: writer)!
+        if assetWriterTimes.count == index {
+            let time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+            assetWriterTimes.append(time)
+            writer.startSession(atSourceTime: time)
+        }
+        
+        writerInput.append(sampleBuffer)
+    }
+    
     // MARK: - Session management
     
     private func configureSession() {
@@ -230,6 +258,18 @@ class CaptureViewController: UIViewController {
             session.commitConfiguration()
             return
         }
+        
+        guard let dataConn = videoDataOutput.connection(with: .video) else {
+            print("No video data connection")
+            session.commitConfiguration()
+            return
+        }
+        guard dataConn.isVideoOrientationSupported else {
+            print("Cannot set orientation")
+            session.commitConfiguration()
+            return
+        }
+        dataConn.videoOrientation = .portrait
         
         session.commitConfiguration()
     }
@@ -394,7 +434,7 @@ class CaptureViewController: UIViewController {
     
     @IBAction func recordStateDidChange(_ sender: UISwitch) {
         if sender.isOn {
-            var urlCount = tempVideoUrls.count
+            var urlCount = assetWriters.count
             urlCount += 1
             let tempFolderPath =
                 NSSearchPathForDirectoriesInDomains(.documentDirectory,
@@ -402,10 +442,46 @@ class CaptureViewController: UIViewController {
                                                     true).first!
             let videoPath = tempFolderPath.appending("/temp\(urlCount).mov")
             let tempVideoUrl = URL(fileURLWithPath: videoPath)
-            
+            writeOutputQueue.async {
+                if FileManager.default.fileExists(atPath: tempVideoUrl.path) {
+                    try! FileManager.default.removeItem(at: tempVideoUrl)
+                }
+                let assetWriter = try! AVAssetWriter(outputURL: tempVideoUrl,
+                                                     fileType: .mov)
+                let settings: [String : Any] = [
+                    AVVideoCodecKey : AVVideoCodecType.h264,
+                    AVVideoWidthKey : 1080,
+                    AVVideoHeightKey : 1920,
+                    AVVideoCompressionPropertiesKey : [AVVideoAverageBitRateKey : 2300000]
+                ]
+                let writerInput = AVAssetWriterInput(mediaType: .video,
+                                                     outputSettings: settings)
+                writerInput.expectsMediaDataInRealTime = true
+                guard assetWriter.canAdd(writerInput) else {
+                    fatalError("Cannot add input to video writer")
+                }
+                assetWriter.add(writerInput)
+                self.assetWriters.append(assetWriter)
+                assetWriter.startWriting()
+            }
         } else {
             recordButton.isEnabled = false
-            
+            writeOutputQueue.async {
+                let writer = self.assetWriters.last!
+                let writerInput = writer.inputs.first!
+                writerInput.markAsFinished()
+                writer.finishWriting {
+                    if writer.status != .completed {
+                        print(writer.error!.localizedDescription)
+                    }
+                    DispatchQueue.main.async {
+                        self.recordButton.isEnabled = true
+                        if self.assetWriters.count == 2 {
+                            self.performSegue(withIdentifier: "showComposition", sender: nil)
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -438,13 +514,13 @@ class CaptureViewController: UIViewController {
     }
     
     @IBAction func unwindToCapture(segue: UIStoryboardSegue) {
-        tempVideoUrls = []
+        assetWriters = []
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let compVC = segue.destination as! CompositionViewController
-        compVC.backgroundVideoUrl = tempVideoUrls.last!
-        compVC.foregroundVideoUrl = tempVideoUrls.first!
+        compVC.backgroundVideoUrl = assetWriters.last!.outputURL
+        compVC.foregroundVideoUrl = assetWriters.first!.outputURL
     }
     
     // MARK: - KVO and Notifications
@@ -564,5 +640,8 @@ extension CaptureViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                        didOutput sampleBuffer: CMSampleBuffer,
                        from connection: AVCaptureConnection) {
         renderVideo(sampleBuffer: sampleBuffer)
+        writeOutputQueue.async {
+            self.writeSampleBuffer(sampleBuffer)
+        }
     }
 }
