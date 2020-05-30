@@ -39,6 +39,8 @@ class CaptureViewController: UIViewController {
     
     private var renderingEnabled = true
     
+    private var shouldAskReuseQuestion = false
+    
     @IBOutlet private weak var videoView: PreviewMetalView!
     @IBOutlet private weak var resumeButton: UIButton!
     @IBOutlet private weak var cameraUnavailableLabel: UILabel!
@@ -47,6 +49,21 @@ class CaptureViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let tempFileCount = writtenTempVideoUrls().count
+        if tempFileCount == 2 {
+            shouldAskReuseQuestion = true
+        }
+        switch tempFileCount {
+        case 2:
+            shouldAskReuseQuestion = true
+            
+        case 0:
+            break
+            
+        default:
+            clearTempVideoFiles()
+        }
         
         // Disable UI. The UI is enabled if and only if the session starts running.
         cameraButton.isEnabled = false
@@ -153,6 +170,25 @@ class CaptureViewController: UIViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if shouldAskReuseQuestion {
+            let question =
+                UIAlertController.simpleQuestionAlertWith(title: "FilterBrim",
+                                                          message: "There are recorded files saved. Do you want to use them?",
+                                                          yesAction: {
+                                                            self.shouldAskReuseQuestion = false
+                                                            self.goToCompositionScreen()
+                },
+                                                          noAction: {
+                                                            self.shouldAskReuseQuestion = false
+                                                            self.clearTempVideoFiles()
+                })
+            self.present(question, animated: true, completion: nil)
+        }
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         dataOutputQueue.async {
             self.renderingEnabled = false
@@ -193,6 +229,10 @@ class CaptureViewController: UIViewController {
     // MARK: - Video file writing
     
     func writeSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
+        guard CMSampleBufferDataIsReady(sampleBuffer) else {
+            return
+        }
+        
         guard assetWriters.count > 0 else {
             return
         }
@@ -258,18 +298,6 @@ class CaptureViewController: UIViewController {
             session.commitConfiguration()
             return
         }
-        
-        guard let dataConn = videoDataOutput.connection(with: .video) else {
-            print("No video data connection")
-            session.commitConfiguration()
-            return
-        }
-        guard dataConn.isVideoOrientationSupported else {
-            print("Cannot set orientation")
-            session.commitConfiguration()
-            return
-        }
-        dataConn.videoOrientation = .portrait
         
         session.commitConfiguration()
     }
@@ -377,6 +405,43 @@ class CaptureViewController: UIViewController {
         return intersection.popFirst()! as! AVCaptureDeviceInput
     }
     
+    func tempVideoUrls() -> [URL] {
+        let tempFolderPath =
+            NSSearchPathForDirectoriesInDomains(.documentDirectory,
+                                                .userDomainMask,
+                                                true).first!
+        var urls: [URL] = []
+        for i in 1...2 {
+            let videoPath = tempFolderPath.appending("/temp\(i).mov")
+            let tempVideoUrl = URL(fileURLWithPath: videoPath)
+            urls.append(tempVideoUrl)
+        }
+        
+        return urls
+    }
+    
+    func writtenTempVideoUrls() -> [URL] {
+        let fileManager = FileManager.default
+        var writtenUrls: [URL] = []
+        for url in tempVideoUrls() {
+            if fileManager.fileExists(atPath: url.path) {
+                writtenUrls.append(url)
+            }
+        }
+        return writtenUrls
+    }
+    
+    func clearTempVideoFiles() {
+        for url in writtenTempVideoUrls() {
+            try! FileManager.default.removeItem(at: url)
+        }
+    }
+    
+    func goToCompositionScreen() {
+        let urls = tempVideoUrls()
+        performSegue(withIdentifier: "showComposition", sender: urls)
+    }
+    
     // MARK: - IBActions
     
     @IBAction func didTapCameraButton(_ sender: UIButton) {
@@ -434,29 +499,41 @@ class CaptureViewController: UIViewController {
     
     @IBAction func recordStateDidChange(_ sender: UISwitch) {
         if sender.isOn {
-            var urlCount = assetWriters.count
-            urlCount += 1
-            let tempFolderPath =
-                NSSearchPathForDirectoriesInDomains(.documentDirectory,
-                                                    .userDomainMask,
-                                                    true).first!
-            let videoPath = tempFolderPath.appending("/temp\(urlCount).mov")
-            let tempVideoUrl = URL(fileURLWithPath: videoPath)
             writeOutputQueue.async {
+                var urlCount = self.assetWriters.count
+                urlCount += 1
+                let tempFolderPath =
+                    NSSearchPathForDirectoriesInDomains(.documentDirectory,
+                                                        .userDomainMask,
+                                                        true).first!
+                let videoPath = tempFolderPath.appending("/temp\(urlCount).mov")
+                let tempVideoUrl = URL(fileURLWithPath: videoPath)
                 if FileManager.default.fileExists(atPath: tempVideoUrl.path) {
                     try! FileManager.default.removeItem(at: tempVideoUrl)
                 }
+                
+                let fileType = AVFileType.mov
+                let codecTypes =
+                    self.videoDataOutput.availableVideoCodecTypesForAssetWriter(writingTo: fileType)
+                let settings: [AnyHashable : Any]
+                if codecTypes.contains(.hevc) {
+                    settings =
+                        self.videoDataOutput.recommendedVideoSettings(forVideoCodecType: .hevc,
+                                                                      assetWriterOutputFileType: fileType)!
+                } else {
+                    settings =
+                        self.videoDataOutput.recommendedVideoSettingsForAssetWriter(writingTo: fileType)!
+                }
                 let assetWriter = try! AVAssetWriter(outputURL: tempVideoUrl,
-                                                     fileType: .mov)
-                let settings: [String : Any] = [
-                    AVVideoCodecKey : AVVideoCodecType.h264,
-                    AVVideoWidthKey : 1080,
-                    AVVideoHeightKey : 1920,
-                    AVVideoCompressionPropertiesKey : [AVVideoAverageBitRateKey : 2300000]
-                ]
+                                                     fileType: fileType)
+                
                 let writerInput = AVAssetWriterInput(mediaType: .video,
-                                                     outputSettings: settings)
+                                                     outputSettings: settings as? [String : Any])
                 writerInput.expectsMediaDataInRealTime = true
+                let height: Int = settings[AVVideoHeightKey] as! Int
+                var transform = CGAffineTransform(rotationAngle: .pi / 2)
+                transform = transform.translatedBy(x: 0, y: -CGFloat(height))
+                writerInput.transform = transform
                 guard assetWriter.canAdd(writerInput) else {
                     fatalError("Cannot add input to video writer")
                 }
@@ -477,7 +554,7 @@ class CaptureViewController: UIViewController {
                     DispatchQueue.main.async {
                         self.recordButton.isEnabled = true
                         if self.assetWriters.count == 2 {
-                            self.performSegue(withIdentifier: "showComposition", sender: nil)
+                            self.goToCompositionScreen()
                         }
                     }
                 }
@@ -518,9 +595,10 @@ class CaptureViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let urls = sender as! [URL]
         let compVC = segue.destination as! CompositionViewController
-        compVC.backgroundVideoUrl = assetWriters.last!.outputURL
-        compVC.foregroundVideoUrl = assetWriters.first!.outputURL
+        compVC.backgroundVideoUrl = urls.last!
+        compVC.foregroundVideoUrl = urls.first!
     }
     
     // MARK: - KVO and Notifications

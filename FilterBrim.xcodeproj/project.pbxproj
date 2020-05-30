@@ -14,6 +14,7 @@
 		2672370C1E79BF6E003D2EAA /* RosyEffect.metal in Sources */ = {isa = PBXBuildFile; fileRef = 2672370B1E79BF6E003D2EAA /* RosyEffect.metal */; };
 		2672370E1E79BFC0003D2EAA /* DepthToGrayscale.metal in Sources */ = {isa = PBXBuildFile; fileRef = 2672370D1E79BFBF003D2EAA /* DepthToGrayscale.metal */; };
 		267ED8501ED7974A00898078 /* minMaxFromBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 267ED84E1ED7965B00898078 /* minMaxFromBuffer.m */; };
+		B83261FA2482540A006D2D85 /* UIAlertController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83261F92482540A006D2D85 /* UIAlertController+Convenience.swift */; };
 		B8649E29247FAF0B005AED48 /* Capture.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B8649E27247FAF0B005AED48 /* Capture.storyboard */; };
 		B8649E2C247FB1E9005AED48 /* CaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8649E2B247FB1E9005AED48 /* CaptureViewController.swift */; };
 		B8E70389247FB64C00F5AE44 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B8E70387247FB64C00F5AE44 /* Localizable.strings */; };
@@ -43,6 +44,7 @@
 		267ED84D1ED7965A00898078 /* FilterBrim-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FilterBrim-Bridging-Header.h"; sourceTree = "<group>"; };
 		267ED84E1ED7965B00898078 /* minMaxFromBuffer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = minMaxFromBuffer.m; sourceTree = "<group>"; };
 		267ED84F1ED7965B00898078 /* minMaxFromBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = minMaxFromBuffer.h; sourceTree = "<group>"; };
+		B83261F92482540A006D2D85 /* UIAlertController+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Convenience.swift"; sourceTree = "<group>"; };
 		B8649E28247FAF0B005AED48 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Capture.storyboard; sourceTree = "<group>"; };
 		B8649E2B247FB1E9005AED48 /* CaptureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureViewController.swift; sourceTree = "<group>"; };
 		B8E70388247FB64C00F5AE44 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = FilterBrim/Storyboards/Base.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -89,6 +91,15 @@
 			path = Shaders;
 			sourceTree = "<group>";
 		};
+		B83261F8248253E9006D2D85 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				B8E703942480213F00F5AE44 /* AVAsset+Convenience.swift */,
+				B83261F92482540A006D2D85 /* UIAlertController+Convenience.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		B8649E26247FAE74005AED48 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
@@ -108,14 +119,6 @@
 				B8E7038C24800E3200F5AE44 /* CompositionViewController.swift */,
 			);
 			path = "View controllers";
-			sourceTree = "<group>";
-		};
-		B8E70393248020EF00F5AE44 /* Video composition */ = {
-			isa = PBXGroup;
-			children = (
-				B8E703942480213F00F5AE44 /* AVAsset+Convenience.swift */,
-			);
-			path = "Video composition";
 			sourceTree = "<group>";
 		};
 		B8E703982481581200F5AE44 /* Fonts */ = {
@@ -149,8 +152,8 @@
 		E422DFB91CEF894F0047D7A4 /* FilterBrim */ = {
 			isa = PBXGroup;
 			children = (
+				B83261F8248253E9006D2D85 /* Extensions */,
 				B8E703982481581200F5AE44 /* Fonts */,
-				B8E70393248020EF00F5AE44 /* Video composition */,
 				B8649E2A247FB199005AED48 /* View controllers */,
 				B8649E26247FAE74005AED48 /* Storyboards */,
 				E422DFCD1CEF8AF50047D7A4 /* AppDelegate.swift */,
@@ -272,6 +275,7 @@
 				2608B7DB1E70937A00A7310F /* RosyMetalRenderer.swift in Sources */,
 				E4E160DD1D0099F100C83A5A /* RosyCIRenderer.swift in Sources */,
 				E4A8A1421CF6188A006823AB /* PassThrough.metal in Sources */,
+				B83261FA2482540A006D2D85 /* UIAlertController+Convenience.swift in Sources */,
 				B8E703952480213F00F5AE44 /* AVAsset+Convenience.swift in Sources */,
 				E422DFCF1CEF8AF50047D7A4 /* AppDelegate.swift in Sources */,
 				267ED8501ED7974A00898078 /* minMaxFromBuffer.m in Sources */,
