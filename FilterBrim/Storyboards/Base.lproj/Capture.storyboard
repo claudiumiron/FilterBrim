@@ -71,7 +71,7 @@
                         <outlet property="recordButton" destination="ceC-us-rJf" id="jAz-LZ-r1v"/>
                         <outlet property="resumeButton" destination="cj5-Bn-225" id="XgS-PT-dHg"/>
                         <outlet property="videoView" destination="ny9-SH-SF4" id="aoq-ji-Z48"/>
-                        <segue destination="CGz-fx-U5D" kind="presentation" identifier="showComposition" id="cLV-oY-86I"/>
+                        <segue destination="CGz-fx-U5D" kind="presentation" identifier="showComposition" animates="NO" id="cLV-oY-86I"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lca-JX-cVa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -15,11 +15,12 @@ class CompositionViewController: UIViewController {
     
     public var foregroundVideoUrl: URL!
     
-    private let composition = AVMutableComposition()
+    private var composition: AVMutableComposition! = AVMutableComposition()
     
-    private let videoComposition = AVMutableVideoComposition()
-    
-    private let dataOutputQueue = DispatchQueue(label: "VideoDataQueue", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem)
+    private let dataOutputQueue = DispatchQueue(label: "VideoDataQueue",
+                                                qos: .userInitiated,
+                                                attributes: [],
+                                                autoreleaseFrequency: .workItem)
     
     private var videoOutput: AVPlayerItemVideoOutput!
     
@@ -29,12 +30,21 @@ class CompositionViewController: UIViewController {
     
     private var player: AVPlayer!
     
+    private var players: [AVPlayer] = []
+    
     private var displayLink: CADisplayLink!
     
-    @IBOutlet private weak var previewView: PreviewMetalView!
+    private var availableBgCiFilters: [CIFilter] = []
+    private var currentBgFilterIndex = -1
+    
+    private var videoCompositor: FilterVideoCompositor!
+    
+    @IBOutlet private weak var backgroundView: PreviewMetalView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupBgFilters()
         
         let bgAsset = AVAsset(url: backgroundVideoUrl)
         bgAsset.prepare(properties: ["tracks", "duration"]) {
@@ -47,6 +57,16 @@ class CompositionViewController: UIViewController {
             self.fgAsset = fgAsset
             self.assetLoaded()
         }
+        
+        let leftSwipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(leftFilterSwipe))
+        leftSwipeGesture.direction = .left
+        backgroundView.addGestureRecognizer(leftSwipeGesture)
+        
+        let rightSwipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(rightFilterSwipe))
+        rightSwipeGesture.direction = .right
+        backgroundView.addGestureRecognizer(rightSwipeGesture)
+        
+        backgroundView.rotation = .rotate90Degrees
     }
     
     private func assetLoaded() {
@@ -75,7 +95,6 @@ class CompositionViewController: UIViewController {
         let compFgVideoTrack = composition.addMutableTrack(withMediaType: .video,
                                                            preferredTrackID: 1)!
         let assetFgVideoTrack = fgAsset.firstVideoTrack!
-        //compFgVideoTrack.preferredTransform = assetFgVideoTrack.preferredTransform
         try! compFgVideoTrack.insertTimeRange(timeRange,
                                               of: assetFgVideoTrack,
                                               at: .zero)
@@ -86,7 +105,8 @@ class CompositionViewController: UIViewController {
         let renderSize = CGSize(width: abs(transformedSize.width),
                                 height: abs(transformedSize.height))
         
-        videoComposition.renderSize = renderSize
+        let videoComposition = AVMutableVideoComposition()
+        videoComposition.renderSize = naturalSize//renderSize
         videoComposition.frameDuration =
             CMTimeMakeWithSeconds(Float64(1.0 / assetBgVideoTrack.nominalFrameRate),
                                   preferredTimescale: assetBgVideoTrack.naturalTimeScale);
@@ -112,6 +132,7 @@ class CompositionViewController: UIViewController {
         
         instruction.layerInstructions = [fgInstruction, bgInstruction]
         videoComposition.instructions = [instruction]
+        videoComposition.customVideoCompositorClass = FilterVideoCompositor.self
         
         dataOutputQueue.async {
             let settings =
@@ -119,9 +140,28 @@ class CompositionViewController: UIViewController {
             self.videoOutput = AVPlayerItemVideoOutput(pixelBufferAttributes: settings)
             
             let playerItem = AVPlayerItem(asset: self.composition)
-            //playerItem.customVideoCompositor
-            playerItem.videoComposition = self.videoComposition
+            playerItem.videoComposition = videoComposition
             playerItem.add(self.videoOutput)
+            
+            self.videoCompositor =
+                playerItem.customVideoCompositor as! FilterVideoCompositor
+            
+            let bgTransformFilter = CIFilter(name: "CIAffineTransform")
+            bgTransformFilter!.setValue(bgTransform, forKey: kCIInputTransformKey)
+            let bgCIFilters: [CIFilter] = [
+                CIFilter(name: "CIPhotoEffectNoir")!//, bgTransformFilter!
+            ]
+            
+            let opacity = CIFilter(name: "CIColorMatrix")
+            opacity!.setValue(CIVector(x: 0.0, y: 0.0, z: 0.0, w: 0.7), forKey: "inputAVector")
+            let scale = CIFilter(name: "CIAffineTransform")
+            scale!.setValue(CGAffineTransform(scaleX: 0.5, y: 0.5), forKey: kCIInputTransformKey)
+            let fgCIFilters: [CIFilter] = [
+                opacity!, scale!
+            ]
+            
+            //self.videoCompositor.set(ciFilters: bgCIFilters, forTrackId: 2)
+            self.videoCompositor.set(ciFilters: fgCIFilters, forTrackId: 1)
             
             self.player = AVPlayer(playerItem: playerItem)
             self.player.actionAtItemEnd = .none
@@ -150,22 +190,75 @@ class CompositionViewController: UIViewController {
                 return
             }
             
-            let buffer =
+            guard let buffer =
                 self.videoOutput.copyPixelBuffer(forItemTime: item.currentTime(),
-                                                 itemTimeForDisplay:nil)
-            if let unwrappedBuffer = buffer {
-                self.previewView.pixelBuffer = unwrappedBuffer
+                                                 itemTimeForDisplay:nil) else {
+                                                    return
             }
+            self.backgroundView.pixelBuffer = buffer
         }
+    }
+    
+    @objc func leftFilterSwipe() {
+        print("left swipe")
+        currentBgFilterIndex += 1
+        
+        if currentBgFilterIndex >= availableBgCiFilters.count {
+            currentBgFilterIndex = -1
+        }
+        let filter = bgFilter(for: currentBgFilterIndex)
+        set(bgFilter: filter)
+    }
+    
+    @objc func rightFilterSwipe() {
+        print("right swipe")
+        currentBgFilterIndex -= 1
+        
+        if currentBgFilterIndex < -1 {
+            currentBgFilterIndex = availableBgCiFilters.count - 1
+        }
+        
+        let filter = bgFilter(for: currentBgFilterIndex)
+        set(bgFilter: filter)
+    }
+    
+    private func bgFilter(for index: Int) -> CIFilter? {
+        switch index {
+        case -1:
+            return nil
+            
+        default:
+            return availableBgCiFilters[index]
+        }
+    }
+    
+    private func set(bgFilter: CIFilter?) {
+        var filters: [CIFilter] = []
+        if let filter = bgFilter {
+            filters.append(filter)
+        }
+        videoCompositor.set(ciFilters: filters, forTrackId: 2)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+        self.composition = nil
+        self.videoCompositor = nil
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         self.displayLink.remove(from: .main, forMode: .common)
+        
+        self.player.pause()
+    }
+    
+    private func setupBgFilters() {
+        let noir    = CIFilter(name: "CIPhotoEffectNoir")!
+        let chrome  = CIFilter(name: "CIPhotoEffectChrome")!
+        let instant = CIFilter(name: "CIPhotoEffectInstant")!
+        
+        availableBgCiFilters = [noir, chrome, instant]
+        currentBgFilterIndex = -1
     }
     
 }

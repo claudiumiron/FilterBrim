@@ -131,4 +131,5 @@ class RosyMetalRenderer: FilterRenderer {
         
         return texture
     }
+
 }

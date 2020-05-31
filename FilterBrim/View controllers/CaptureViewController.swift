@@ -192,6 +192,8 @@ class CaptureViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         dataOutputQueue.async {
             self.renderingEnabled = false
+            self.videoView.pixelBuffer = nil
+            self.videoView.flushTextureCache()
         }
         sessionQueue.async {
             if self.setupResult == .success {
@@ -430,7 +432,7 @@ class CaptureViewController: UIViewController {
     }
     
     func goToCompositionScreen() {
-        let urls = tempVideoUrls()
+        let urls = writtenTempVideoUrls()
         performSegue(withIdentifier: "showComposition", sender: urls)
     }
     
@@ -584,6 +586,7 @@ class CaptureViewController: UIViewController {
     
     @IBAction func unwindToCapture(segue: UIStoryboardSegue) {
         assetWriters = []
+        assetWriterTimes = []
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

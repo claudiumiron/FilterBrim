@@ -335,7 +335,7 @@ class PreviewMetalView: MTKView {
             self.bounds != internalBounds ||
             mirroring != textureMirroring ||
             rotation != textureRotation {
-            setupTransform(width: texture.width, height: texture.height, mirroring: mirroring, rotation: rotation, resizing: .aspectFill)
+            setupTransform(width: texture.width, height: texture.height, mirroring: mirroring, rotation: rotation, resizing: .aspectFit)
         }
         
         // Set up command buffer and encoder

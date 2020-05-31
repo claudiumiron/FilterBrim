@@ -40,7 +40,7 @@
                         <viewLayoutGuide key="safeArea" id="cLS-ro-tCG"/>
                     </view>
                     <connections>
-                        <outlet property="previewView" destination="wGi-Hg-wTi" id="Gdn-ed-iTq"/>
+                        <outlet property="backgroundView" destination="wGi-Hg-wTi" id="Gdn-ed-iTq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R85-rN-0Zk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

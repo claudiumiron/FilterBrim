@@ -120,6 +120,10 @@ class DepthToGrayscaleConverter: FilterRenderer {
         isPrepared = true
     }
     
+    func prepare() {
+        
+    }
+    
     func reset() {
         outputPixelBufferPool = nil
         outputFormatDescription = nil
@@ -187,6 +191,10 @@ class DepthToGrayscaleConverter: FilterRenderer {
         commandBuffer.commit()
         
         return outputPixelBuffer
+    }
+    
+    func render(inPixelBuffer: CVPixelBuffer, in outPixelBuffer: UnsafeMutablePointer<CVPixelBuffer>) {
+        
     }
     
     func makeTextureFromCVPixelBuffer(pixelBuffer: CVPixelBuffer, textureFormat: MTLPixelFormat) -> MTLTexture? {
